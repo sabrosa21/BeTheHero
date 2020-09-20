@@ -1,4 +1,5 @@
 const express = require("express");
+const { celebrate, Joi, Segments } = require("celebrate");
 
 const OngController = require("./controllers/OngController");
 const IncidentController = require("./controllers/IncidentController");
@@ -14,18 +15,55 @@ routes.get("/ongs", OngController.index);
 
 // Abstracted the route from the controllers
 // Create an ONG
-routes.post("/ongs", OngController.create);
+// Celbrate needs to be before the creation
+routes.post(
+  "/ongs",
+  celebrate({
+    [Segments.BODY]: Joi.object().keys({
+      name: Joi.string().required(),
+      email: Joi.string().required().email(),
+      whatsapp: Joi.number().required().min(9).max(14),
+      city: Joi.string().required,
+      uf: Joi.string().required().length(2),
+    }),
+  }),
+  OngController.create
+);
 
 // Select all Incident
-routes.get("/incidents", IncidentController.index);
+routes.get(
+  "/incidents",
+  celebrate({
+    [Segments.QUERY]: Joi.object().keys({
+      page: Joi.number(),
+    }),
+  }),
+  IncidentController.index
+);
 // Create an Incident
 routes.post("/incidents", IncidentController.create);
 
 // Delete an incident
-routes.delete("/incidents/:id", IncidentController.delete);
+routes.delete(
+  "/incidents/:id",
+  celebrate({
+    [Segments.PARAMS]: Joi.object().keys({
+      id: Joi.number().required(),
+    }),
+  }),
+  IncidentController.delete
+);
 
 // Get the specified ONG incidents
-routes.get("/profile", ProfileController.index);
+routes.get(
+  "/profile",
+  celebrate({
+    [Segments.HEADERS]: Joi.object({
+      authorization: Joi.string().required(),
+    }).unknown(),
+  }),
+  ProfileController.index
+);
 
 //Exports the routes to be able to use it in another files
 module.exports = routes;

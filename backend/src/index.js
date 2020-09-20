@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const { errors } = require("celebrate");
 const routes = require("./routes");
 
 const app = express();
@@ -10,5 +11,7 @@ app.use(cors());
 app.use(express.json());
 // The routes needs to be placed bellow the line above
 app.use(routes);
+// To throw the error from celebrate, to avoid error 500
+app.use(errors());
 
 app.listen(3333);

@@ -11,7 +11,7 @@ module.exports = {
     return response.json(ongs);
   },
 
-  // To create an ONG
+  // To create an NGO
   async create(request, response) {
     const { name, email, whatsapp, city, uf } = request.body;
 
