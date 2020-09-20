@@ -14,4 +14,4 @@ app.use(routes);
 // To throw the error from celebrate, to avoid error 500
 app.use(errors());
 
-app.listen(3333);
+module.exports = app;
